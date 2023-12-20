@@ -13,7 +13,82 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MaterialDesign(),
+      // home: MaterialDesign(),
+      initialRoute: '/',
+      routes: {
+        '/':(context) => MaterialDesign(),
+        '/first': (context) => const firstRoute(data: 'Hello from Material Page!'),
+        '/second': (context) => const secondRoute(),
+      },
+    );
+  }
+}
+
+class firstRoute extends StatelessWidget {
+  const firstRoute({Key? key, required this.data}) : super(key: key);
+  final String data;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Navigation First Route'),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(data),
+              ElevatedButton(
+                child: const Text('Launch second creen'),
+                onPressed: () {
+                  
+                  Navigator.pushNamed(context, '/second');
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Go back'),
+                onPressed: () {
+                  
+                  Navigator.pop(context,'Hello from first page!!');
+                },
+              ),
+            ],
+          ),
+        ), // Elevated
+ 
+        
+        //   child: const Text('Launch screen'),
+        //   onPressed: () {
+        //     Navigator.pushNamed(context, '/second');
+        //   },
+        // ),
+      ),
+    );
+  }
+}
+
+class secondRoute extends StatelessWidget {
+  const secondRoute({Key? key}) : super(key: key);
+ 
+  @override
+  // ignore: dead_code
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Navigation Second Route"),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context,'Hello from Second Page!');
+          },
+          child: const Text('Go back!'),
+        ), // ElevatedButton
+      ),
+ 
     );
   }
 }
@@ -169,6 +244,29 @@ class _MaterialDesignState extends State<MaterialDesign> {
               duration: Duration(seconds: 1),
               curve: Curves.easeInOut,
             ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+            child: const Text('Launch Screen by route based navigation'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/first');
+            },
+                    ),
+          ), // Elev
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+            child: const Text('Launch Screen by page based navigation'),
+            onPressed: () async {
+              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => firstRoute(data: 'Hello from Material Page!')));
+              print(result);
+              ScaffoldMessenger.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text('$result')));
+            },
+                    ),
+          ), // Elev
 
             SizedBox(height: 16.0),
 
